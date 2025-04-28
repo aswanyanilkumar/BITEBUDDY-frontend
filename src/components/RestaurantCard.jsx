@@ -33,3 +33,4 @@ function RestaurantCard({ restaurant }) {
 
 export default RestaurantCard;
 
+
