@@ -16,11 +16,11 @@ const UserAuth = () => {
     try {
       let res;
       if (isSignup) {
-        res = await axios.post('http://localhost:3001/users/signup', { name, email, password });
+        res = await axios.post('http://localhost:3001/user/register', { name, email, password });
       } else {
-        res = await axios.post('http://localhost:3001/users/login', { email, password });
+        res = await axios.post('http://localhost:3001/user/login', { email, password });
       }
-
+      localStorage.setItem("token", res.data.token); 
       localStorage.setItem('user', JSON.stringify(res.data)); // Storing user data
       navigate('/'); // Redirect to homepage or wherever you want
     } catch (err) {
@@ -29,7 +29,8 @@ const UserAuth = () => {
   };
 
   return (
-    <div className="p-4 max-w-md mx-auto">
+    <div className="p-4 min-h-screen" style={{ backgroundColor: '#bbcac8' }}>
+      <div className="max-w-md mx-auto">
       <h2 className="text-2xl font-bold mb-4">{isSignup ? 'Sign Up' : 'Log In'}</h2>
       <form onSubmit={handleAuth} className="flex flex-col gap-3">
         {isSignup && (
@@ -66,6 +67,7 @@ const UserAuth = () => {
           {isSignup ? ' Log In' : ' Sign Up'}
         </span>
       </p>
+    </div>
     </div>
   );
 };

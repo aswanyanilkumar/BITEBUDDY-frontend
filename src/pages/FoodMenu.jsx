@@ -1,8 +1,9 @@
 // src/pages/FoodMenu.jsx
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { CartContext } from '../context/CartContext';
+import FoodCard from '../components/FoodCard'; // Make sure this import exists
 
 function FoodMenu() {
   const { restaurantId } = useParams();
@@ -18,9 +19,9 @@ function FoodMenu() {
   useEffect(() => {
     const fetchFoodItems = async () => {
       try {
-        const response = await axios.get(`http://localhost:3001/fooditems/restaurant/${restaurantId}`);
+        const response = await axios.get(`http://localhost:3001/food/restaurant/${restaurantId}`);
         setFoodItems(response.data);
-        setFilteredItems(response.data); // Initially show all
+        setFilteredItems(response.data);
         setLoading(false);
       } catch (err) {
         setError("Failed to load food items.");
@@ -48,6 +49,7 @@ function FoodMenu() {
   }
 
   return (
+        <div className="min-h-screen" style={{ backgroundColor: '#bbcac8' }}>
     <div className="p-6">
       <h2 className="text-3xl font-bold text-red-500 mb-6 text-center">Food Menu</h2>
 
@@ -72,31 +74,14 @@ function FoodMenu() {
       {filteredItems.length === 0 ? (
         <div className="text-center text-gray-600">No items available in this category.</div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+        <div className="flex flex-wrap justify-center gap-6">
           {filteredItems.map((item) => (
-            <div key={item._id} className="bg-white p-4 rounded-lg shadow-md">
-              <img
-                src={item.image}
-                alt={item.name}
-                className="w-full h-48 object-cover rounded-md mb-4"
-                onError={(e) => (e.target.src = "https://via.placeholder.com/300x200?text=Image+Unavailable")}
-              />
-              <h3 className="text-xl font-semibold mb-1">{item.name}</h3>
-              <p className="text-gray-600 text-sm mb-1">{item.category}</p>
-              <p className="text-gray-700 mb-2">{item.description}</p>
-              <div className="flex justify-between items-center">
-                <span className="text-green-600 font-bold text-lg">₹{item.price}</span>
-                <button
-                  onClick={() => addToCart(item)}
-                  className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 text-sm"
-                >
-                  Add to Cart
-                </button>
-              </div>
-            </div>
+            <FoodCard key={item._id} food={{ ...item, restaurant: restaurantId }} />
+
           ))}
         </div>
       )}
+    </div>
     </div>
   );
 }

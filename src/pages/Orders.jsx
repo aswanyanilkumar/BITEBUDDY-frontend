@@ -25,7 +25,7 @@ const Orders = () => {
   }, [token]);
 
   return (
-    <div className="max-w-4xl mx-auto px-6 py-8">
+    <div className="min-h-screen bg-[#bbcac8] max-w-4xl mx-auto px-6 py-8">
       <h2 className="text-3xl font-bold mb-6 text-center">My Orders</h2>
 
       {orders.length === 0 ? (
@@ -47,13 +47,13 @@ const Orders = () => {
                 {order.items.map((item, idx) => (
                   <li key={idx} className="flex justify-between text-sm">
                     <span>{item.foodItem.name} x {item.quantity}</span>
-                    <span>${(item.foodItem.price * item.quantity).toFixed(2)}</span>
+                    <span>₹{(item.foodItem.price * item.quantity).toFixed(2)}</span>
                   </li>
                 ))}
               </ul>
 
               <div className="flex justify-between items-center pt-2 border-t mt-2">
-                <p className="font-medium">Total: ${order.totalPrice.toFixed(2)}</p>
+                <p className="font-medium">Total: ₹{order.totalPrice.toFixed(2)}</p>
                 <p className="text-sm text-gray-700">
                   <span className="font-semibold">Status:</span> {order.orderStatus}
                 </p>

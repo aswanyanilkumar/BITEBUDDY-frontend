@@ -19,7 +19,7 @@ const ManageUsers = () => {
   }, []);
 
   return (
-    <div className="p-6">
+    <div className="min-h-screen bg-gradient-to-br from-[#5de0e6] to-[#004aad] p-6 text-white">
       <h2 className="text-2xl font-bold mb-4">Manage Users</h2>
       <div className="overflow-x-auto rounded-lg shadow-md">
         <table className="min-w-full table-auto bg-white">
@@ -46,5 +46,7 @@ const ManageUsers = () => {
 };
 
 export default ManageUsers;
+
+
 
   

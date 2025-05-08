@@ -3,7 +3,7 @@ import React from 'react';
 
 const ContactUs = () => {
   return (
-    <div className="max-w-4xl mx-auto p-6">
+    <div className="max-w-4xl mx-auto p-6" style={{ backgroundColor: '#bbcac8' }}>
       <h1 className="text-3xl font-semibold mb-4">Contact Us</h1>
       <p className="mb-6">
         We would love to hear from you! If you have any questions, suggestions, or feedback, feel free to reach out:

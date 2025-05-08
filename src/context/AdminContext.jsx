@@ -1,25 +1,23 @@
 //src/context/AdminContext/jsx
-import { createContext, useContext, useState, useEffect } from 'react';
+
+import { createContext, useContext, useState } from 'react';
 
 const AdminContext = createContext();
 
 export const AdminProvider = ({ children }) => {
-  // Retrieve token from localStorage on load
   const [admin, setAdmin] = useState(() => {
-    const storedToken = localStorage.getItem('adminToken');
-    return storedToken ? storedToken : null;
+    const storedAdmin = localStorage.getItem('admin');
+    return storedAdmin ? JSON.parse(storedAdmin) : null;
   });
 
-  // Store the JWT token in state and localStorage
-  const loginAdmin = (token) => {
-    setAdmin(token);
-    localStorage.setItem('adminToken', token);
+  const loginAdmin = (adminData) => {
+    setAdmin(adminData); // adminData = { token, email, ... }
+    localStorage.setItem('admin', JSON.stringify(adminData));
   };
 
-  // Clear the JWT token from state and localStorage on logout
   const logoutAdmin = () => {
     setAdmin(null);
-    localStorage.removeItem('adminToken');
+    localStorage.removeItem('admin');
   };
 
   return (
@@ -30,4 +28,5 @@ export const AdminProvider = ({ children }) => {
 };
 
 export const useAdmin = () => useContext(AdminContext);
+
 

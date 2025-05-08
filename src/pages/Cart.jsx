@@ -1,15 +1,11 @@
-// src/pages/Cart.jsx
+//src/pages/Cart.jsx
 import React from 'react';
 import { useCart } from '../context/CartContext';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 
 function Cart() {
-  const { cartItems, updateQuantity, removeFromCart, clearCart } = useCart();
+  const { cartItems, updateQuantity, removeFromCart } = useCart();
   const navigate = useNavigate();
-  const token = localStorage.getItem('token');
 
   const handleRemove = (id) => {
     removeFromCart(id);
@@ -24,77 +20,61 @@ function Cart() {
   };
 
   const calculateTotal = () => {
-    return cartItems.reduce((total, item) => total + item.price * item.quantity, 0).toFixed(2);
+    return cartItems
+      .reduce((total, item) => total + item.price * item.quantity, 0)
+      .toFixed(2);
   };
 
-  const handlePlaceOrder = async () => {
-    try {
-      if (!token) return alert("You must be logged in to place an order.");
-
-      const restaurantId = cartItems[0]?.restaurantId; // Assuming all items are from same restaurant
-      if (!restaurantId) return alert("Invalid restaurant info.");
-
-      const orderItems = cartItems.map(item => ({
-        foodItem: item._id,
-        quantity: item.quantity
-      }));
-
-      const response = await axios.post(
-        'http://localhost:3001/orders/place',
-        {
-          restaurant: restaurantId,
-          items: orderItems
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        }
-      );
-
-      alert("Order placed successfully!");
-      clearCart();
-      navigate('/orders');
-    } catch (err) {
-      console.error(err);
-      alert("Failed to place order.");
+  const handleProceedToPayment = () => {
+    if (cartItems.length === 0) {
+      alert("Your cart is empty.");
+      return;
     }
+
+    navigate('/payment');
   };
 
   return (
-    <div className="p-6 max-w-4xl mx-auto">
-      <h2 className="text-3xl font-bold text-gray-800 mb-6 text-center">Your Cart</h2>
+    <div className="min-h-screen bg-[#bbcac8] p-6 max-w-5xl mx-auto">
+      <h2 className="text-4xl font-bold text-gray-800 mb-8 text-center">Your Cart</h2>
 
       {cartItems.length === 0 ? (
-        <p className="text-center text-gray-600">Your cart is empty.</p>
+        <p className="text-center text-gray-500 text-lg">Your cart is empty.</p>
       ) : (
-        <div className="space-y-4">
-          {cartItems.map(item => (
-            <div key={item._id} className="flex justify-between items-center border p-4 rounded-lg">
-              <div>
-                <h3 className="text-lg font-semibold">{item.name}</h3>
-                <p className="text-sm text-gray-500">{item.category}</p>
+        <div className="space-y-6">
+          {cartItems.map((item) => (
+            <div
+              key={item._id}
+              className="flex justify-between items-center p-4 border border-gray-200 rounded-xl shadow-sm bg-white"
+            >
+              <div className="flex flex-col">
+                <h3 className="text-xl font-semibold text-gray-800">{item.name}</h3>
+                <p className="text-sm text-gray-400">{item.category}</p>
               </div>
-              <div className="flex items-center space-x-2">
+
+              <div className="flex items-center space-x-3">
                 <button
                   onClick={() => handleDecrement(item._id)}
-                  className="px-2 py-1 bg-gray-300 rounded-full"
+                  className="w-8 h-8 rounded-full bg-gray-200 text-gray-800 font-bold hover:bg-gray-300"
                 >
                   -
                 </button>
-                <span className="text-lg">{item.quantity}</span>
+                <span className="text-lg font-medium">{item.quantity}</span>
                 <button
                   onClick={() => handleIncrement(item._id)}
-                  className="px-2 py-1 bg-gray-300 rounded-full"
+                  className="w-8 h-8 rounded-full bg-gray-200 text-gray-800 font-bold hover:bg-gray-300"
                 >
                   +
                 </button>
               </div>
+
               <div className="text-right">
-                <p className="text-red-600 font-bold">${(item.price * item.quantity).toFixed(2)}</p>
+                <p className="text-lg text-green-600 font-bold">
+                  ₹{(item.price * item.quantity).toFixed(2)}
+                </p>
                 <button
                   onClick={() => handleRemove(item._id)}
-                  className="text-sm text-white bg-gray-500 hover:bg-gray-700 px-3 py-1 rounded-full mt-2"
+                  className="mt-2 text-xs text-white bg-red-500 hover:bg-red-600 px-3 py-1 rounded-full"
                 >
                   Remove
                 </button>
@@ -105,13 +85,13 @@ function Cart() {
       )}
 
       {cartItems.length > 0 && (
-        <div className="mt-6 border-t pt-4 text-right">
-          <p className="font-semibold text-lg mb-4">Total: ${calculateTotal()}</p>
+        <div className="mt-10 pt-6 border-t border-gray-200 text-right">
+          <p className="text-xl font-semibold text-gray-800 mb-4">Total: ₹{calculateTotal()}</p>
           <button
-            onClick={handlePlaceOrder}
-            className="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition"
+            onClick={handleProceedToPayment}
+            className="bg-blue-600 text-white px-8 py-3 rounded-xl hover:bg-blue-700 transition duration-200"
           >
-            Place Order
+            Proceed to Payment
           </button>
         </div>
       )}
@@ -120,4 +100,3 @@ function Cart() {
 }
 
 export default Cart;
-
