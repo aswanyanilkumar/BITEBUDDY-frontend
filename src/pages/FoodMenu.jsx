@@ -1,9 +1,10 @@
 // src/pages/FoodMenu.jsx
 import React, { useEffect, useState, useContext } from 'react';
 import { useParams } from 'react-router-dom';
-import axios from 'axios';
+import axios from '../api/axiosInstance';
+
 import { CartContext } from '../context/CartContext';
-import FoodCard from '../components/FoodCard'; // Make sure this import exists
+import FoodCard from '../components/FoodCard'; 
 
 function FoodMenu() {
   const { restaurantId } = useParams();
@@ -19,7 +20,8 @@ function FoodMenu() {
   useEffect(() => {
     const fetchFoodItems = async () => {
       try {
-        const response = await axios.get(`http://localhost:3001/food/restaurant/${restaurantId}`);
+        const response = await axios.get(`/food/restaurant/${restaurantId}`);
+
         setFoodItems(response.data);
         setFilteredItems(response.data);
         setLoading(false);
